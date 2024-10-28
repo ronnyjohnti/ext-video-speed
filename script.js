@@ -20,11 +20,16 @@ for(let video of videos) {
 
 document.addEventListener('keydown', e => {
     let playbackRate = 1
-    const key = e.key
+    const { key, target } = e
 
-    if(key === 'd') {
-        const videos = document.querySelectorAll('video')
-        for(let video of videos) {
+    if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') return
+
+    if (key === 'd') {
+        const videos = target.tagName === 'VIDEO'
+            ? [target]
+            : document.querySelectorAll('video')
+
+        for (let video of videos) {
             video.playbackRate += .1
             video.playbackRate = +(video.playbackRate).toFixed(1)
 
@@ -32,10 +37,14 @@ document.addEventListener('keydown', e => {
         }
 
         changePlaybackFlags(playbackRate)
-    } else if(key === 's') {
-        const videos = document.querySelectorAll('video')
+    } else if (key === 's') {
+        const videos = target.tagName === 'VIDEO'
+            ? [target]
+            : document.querySelectorAll('video')
 
-        for(let video of videos) {
+        for (let video of videos) {
+            if (video.playbackRate <= .1) return
+
             video.playbackRate -= .1
             video.playbackRate = +(video.playbackRate).toFixed(1)
 
